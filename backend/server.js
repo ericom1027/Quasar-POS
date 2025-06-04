@@ -15,7 +15,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "http://localhost:9000",
+    origin: ["http://localhost:9000", "https://quasar-pos-1.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
