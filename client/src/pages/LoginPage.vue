@@ -5,7 +5,13 @@
         <q-card class="q-pa-lg shadow-2" style="min-width: 300px; max-width: 400px">
           <q-card-section class="text-center">
             <div class="q-mb-sm">
-              <q-img src="~assets/logo.png" alt="Logo" style="width: 200px; height: auto" contain />
+              <q-img
+                src="~assets/logo.png"
+                alt="Logo"
+                class="q-mx-auto"
+                style="max-width: 200px; height: auto"
+                contain
+              />
             </div>
             <div class="text-h6">Sign in to your POS account</div>
           </q-card-section>
