@@ -51,7 +51,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/ShiftList.vue'),
+        component: () => import('pages/shiftList.vue'),
         meta: { requiresAuth: true, adminOnly: true },
       },
     ],
@@ -98,7 +98,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/WeekLySales.vue'),
+        component: () => import('pages/WeeklySales.vue'),
         meta: { requiresAuth: true, adminOnly: true },
       },
     ],
