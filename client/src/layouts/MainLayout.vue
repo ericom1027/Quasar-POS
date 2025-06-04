@@ -68,8 +68,8 @@
           style="display: flex; align-items: center; justify-content: center; gap: 10px"
         >
           <img
-            alt="Quasar logo"
-            src="~assets/logo.png"
+            alt="Razons logo"
+            src="/Razons.png"
             style="max-width: 90px; animation: rotate 8s linear infinite; caret-color: transparent"
           />
           <span class="text-title"> Point of Sales </span>
