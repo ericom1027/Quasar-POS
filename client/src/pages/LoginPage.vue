@@ -6,7 +6,7 @@
           <q-card-section class="text-center">
             <div class="q-mb-sm">
               <q-img
-                src="~assets/Razons.png"
+                src="/Razons.png"
                 alt="Logo"
                 class="q-mx-auto"
                 style="max-width: 200px; height: auto"
