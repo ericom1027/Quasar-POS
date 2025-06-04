@@ -136,16 +136,47 @@ export default defineConfig((/* ctx */) => {
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
+    // pwa: {
+    //   workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+    //   // swFilename: 'sw.js',
+    //   // manifestFilename: 'manifest.json',
+    //   // extendManifestJson (json) {},
+    //   // useCredentialsForManifestTag: true,
+    //   // injectPwaMetaTags: false,
+    //   // extendPWACustomSWConf (esbuildConf) {},
+    //   // extendGenerateSWOptions (cfg) {},
+    //   // extendInjectManifestOptions (cfg) {}
+    // },
+
     pwa: {
-      workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
-      // swFilename: 'sw.js',
-      // manifestFilename: 'manifest.json',
-      // extendManifestJson (json) {},
-      // useCredentialsForManifestTag: true,
-      // injectPwaMetaTags: false,
-      // extendPWACustomSWConf (esbuildConf) {},
-      // extendGenerateSWOptions (cfg) {},
-      // extendInjectManifestOptions (cfg) {}
+      workboxMode: 'GenerateSW',
+      manifest: {
+        name: 'POS ',
+        short_name: 'POS',
+        description: 'POS Web App ',
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#ffffff',
+        theme_color: '#027be3',
+
+        icons: [
+          {
+            src: '/logo.png',
+            sizes: '128x128',
+            type: 'image/png',
+          },
+          {
+            src: 'logo.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'logo.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
