@@ -23,13 +23,26 @@
       </q-card-section>
 
       <q-card-section v-else-if="salesStore.dailySales">
-        <div class="q-mb-md">
-          <q-badge color="green" label="Total Sales" />
-          <div class="text-h6">₱ {{ filteredTotalSales.toFixed(2) }}</div>
-        </div>
-        <div class="q-mb-md">
-          <q-badge color="blue" label="Total Transactions" />
-          <div class="text-h6">{{ filteredBills.length }}</div>
+        <div class="q-mb-md" style="display: flex; gap: 2rem; flex-wrap: wrap">
+          <div>
+            <q-badge color="blue" label="Total Transactions" />
+            <div class="text-h6">{{ filteredBills.length }}</div>
+          </div>
+
+          <div>
+            <q-badge color="green" label="Total Sales" />
+            <div class="text-h6">₱ {{ filteredTotalSales.toFixed(2) }}</div>
+          </div>
+
+          <div>
+            <q-badge color="red" label="Total Expenses" />
+            <div class="text-h6">₱ {{ salesStore.dailySales.totalExpenses.toFixed(2) }}</div>
+          </div>
+
+          <div>
+            <q-badge color="purple" label="Net Sales" />
+            <div class="text-h6">₱ {{ salesStore.dailySales.netSales.toFixed(2) }}</div>
+          </div>
         </div>
 
         <div class="row q-col-gutter-md items-end">
@@ -169,6 +182,8 @@ function onPrint() {
         bills: filteredBills.value,
         totalSales: filteredTotalSales.value,
         totalTransactions: filteredBills.value.length,
+        totalExpenses: salesStore.dailySales.totalExpenses,
+        netSales: salesStore.dailySales.netSales,
       },
       columns,
     )
@@ -275,7 +290,9 @@ function printDailySales(salesData, columns) {
   const totalSalesHtml = `
     <div class="total-sales">
       Total Sales: ₱${salesData.totalSales.toFixed(2)}<br/>
-      Total Transactions: ${salesData.totalTransactions}
+      Total Transactions: ${salesData.totalTransactions}<br/>
+      Total Expenses: ₱${salesData.totalExpenses.toFixed(2)}<br/>
+      Net Sales: ₱${salesData.netSales.toFixed(2)}
     </div>
   `
 

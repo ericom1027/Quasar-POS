@@ -88,6 +88,20 @@
           @update:model-value="(val) => toggleExpansion('reports', val)"
         >
           <q-list>
+            <q-item clickable v-ripple @click="navigateAndClose('/get-attendance')">
+              <q-item-section avatar>
+                <q-icon name="group" />
+              </q-item-section>
+              <q-item-section>Attendance Reports</q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple @click="navigateAndClose('/sales-cashier')">
+              <q-item-section avatar>
+                <q-icon name="account_circle" />
+              </q-item-section>
+              <q-item-section>Cashier Sales Report</q-item-section>
+            </q-item>
+
             <q-item clickable v-ripple @click="navigateAndClose('/daily-sales-report')">
               <q-item-section avatar>
                 <q-icon name="description" />
@@ -109,13 +123,6 @@
               <q-item-section>Monthly Sales Report</q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple @click="navigateAndClose('/sales-cashier')">
-              <q-item-section avatar>
-                <q-icon name="account_circle" />
-              </q-item-section>
-              <q-item-section>Cashier Sales Report</q-item-section>
-            </q-item>
-
             <q-item clickable v-ripple @click="navigateAndClose('/item-sold-report')">
               <q-item-section avatar>
                 <q-icon name="shopping_cart" />
@@ -130,11 +137,11 @@
               <q-item-section>Shift History</q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple @click="navigateAndClose('/get-attendance')">
+            <q-item clickable v-ripple @click="navigateAndClose('/daily-expenses')">
               <q-item-section avatar>
-                <q-icon name="group" />
+                <q-icon name="wallet" />
               </q-item-section>
-              <q-item-section>Attendance Reports</q-item-section>
+              <q-item-section>Expenses</q-item-section>
             </q-item>
           </q-list>
         </q-expansion-item>
@@ -178,6 +185,9 @@ const openedExpansion = ref('')
 
 onMounted(() => {
   $q.dark.set(isDark.value)
+  if ($q.screen.gt.sm) {
+    leftDrawerOpen.value = false
+  }
 })
 
 const toggleDarkMode = () => {

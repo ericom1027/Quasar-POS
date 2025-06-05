@@ -286,6 +286,7 @@ const confirmCheckout = async () => {
 
     showInvoiceModal.value = false
     cartStore.clearCart()
+    drawerOpen.value = false
     Notify.create({
       type: 'positive',
       position: 'bottom-right',

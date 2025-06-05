@@ -10,6 +10,7 @@ const shiftRoute = require("./routes/shiftRoute");
 const attendanceRoute = require("./routes/attendanceRoute");
 const itemRoute = require("./routes/itemRoute");
 const billRoute = require("./routes/billsRoute");
+const expenseRoutes = require("./routes/expensesRoute");
 const app = express();
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use("/api", shiftRoute);
 app.use("/api", attendanceRoute);
 app.use("/api", itemRoute);
 app.use("/api", billRoute);
+app.use("/api", expenseRoutes);
 
 const PORT = process.env.PORT;
 

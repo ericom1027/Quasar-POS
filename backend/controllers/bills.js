@@ -3,6 +3,7 @@ const Counter = require("../models/Counter");
 const moment = require("moment-timezone");
 const Shift = require("../models/Shift");
 const User = require("../models/User");
+const Expense = require("../models/Expenses");
 const _ = require("lodash");
 
 async function getNextInvoiceNumber() {
@@ -175,11 +176,22 @@ exports.getDailySalesController = async (req, res) => {
 
     const totalSales = bills.reduce((acc, bill) => acc + bill.totalAmount, 0);
 
+    const expenses = await Expense.find({
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+    });
+
+    const totalExpenses = expenses.reduce((acc, exp) => acc + exp.amount, 0);
+
+    const netSales = totalSales - totalExpenses;
+
     res.status(200).json({
       date: targetDate.format("YYYY-MM-DD"),
       totalSales,
+      totalExpenses,
+      netSales,
       totalTransactions: bills.length,
       bills,
+      expenses,
     });
   } catch (error) {
     console.error("Error calculating daily sales:", error);

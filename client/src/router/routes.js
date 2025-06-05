@@ -141,6 +141,18 @@ const routes = [
     ],
   },
 
+  {
+    path: '/daily-expenses',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/ExpensesPage.vue'),
+        meta: { requiresAuth: true, adminOnly: true },
+      },
+    ],
+  },
+
   // User Routes
   {
     path: '/dashboard',

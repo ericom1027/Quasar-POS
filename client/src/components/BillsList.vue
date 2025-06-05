@@ -154,6 +154,15 @@ function printReceipt(bill) {
   const left = window.screenX + (window.outerWidth - width) / 2
   const top = window.screenY + (window.outerHeight - height) / 2
 
+  const date = new Date(bill.date || bill.createdAt || Date.now())
+  const formattedDate = date.toLocaleString('en-PH', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
   const receiptWindow = window.open(
     '',
     'Print Receipt',
@@ -181,9 +190,9 @@ function printReceipt(bill) {
 
   body {
     font-family: monospace;
-    font-size: 20px;
+    font-size: 18px;
     width: 80mm;
-    padding: 3mm;
+    padding: 0.5mm 3mm 3mm 3mm;
     margin: 0;
   }
 
@@ -218,7 +227,8 @@ function printReceipt(bill) {
         <div class="line"></div>
 
         <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
-        <div><strong>Cashier:</strong> ${bill.cashierName}</div>
+         <div><strong>Date:</strong> ${formattedDate}</div> 
+         <div><strong>Cashier:</strong> ${bill.cashierName}</div>
        <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
        ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
         <div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>
