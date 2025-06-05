@@ -185,6 +185,15 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <div class="q-mt-lg q-mt-xl-md q-mt-xxl-xl flex flex-center">
+      <div class="text-caption text-grey text-center">
+        <span
+          class="text-h6 text-white text-center q-mt-md q-px-md q-pa-sm text-grey"
+          ref="typedText"
+        ></span>
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -194,10 +203,12 @@ import { useItemsStore } from '../stores/items'
 import { useCartStore } from '../stores/cart'
 import { useBillStore } from '../stores/billStore'
 import { Notify } from 'quasar'
+import Typed from 'typed.js'
 
 const cartStore = useCartStore()
 const itemsStore = useItemsStore()
 const billStore = useBillStore()
+const typedText = ref(null)
 
 const drawerOpen = ref(false)
 const showInvoiceModal = ref(false)
@@ -215,6 +226,22 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 onMounted(() => {
   itemsStore.fetchItems()
+
+  new Typed(typedText.value, {
+    strings: [
+      'Smart. Fast. Cloud POS.',
+      'Powered by EMD Dev!',
+      'Cloud POS You Can Trust.',
+      'Sell Smarter with Cloud POS!',
+      'Cloud POS, Big Results.',
+      'Your Business, On the Cloud.',
+    ],
+
+    typeSpeed: 100,
+    loop: true,
+    backSpeed: 50,
+    backDelay: 2000,
+  })
 })
 
 function getImageUrl(image) {

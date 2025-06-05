@@ -91,17 +91,24 @@
         </q-card>
       </div>
     </div>
+
+    <span
+      class="text-h6 text-white text-center q-mt-md q-px-md q-pa-sm text-grey"
+      ref="typedText"
+    ></span>
   </q-page>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useBillStore } from '../stores/billStore'
 import { date } from 'quasar'
 import LineChart from '../components/LineChart.vue'
 import PieChart from '../components/PieChart.vue'
+import Typed from 'typed.js'
 
 const billStore = useBillStore()
+const typedText = ref(null)
 
 onMounted(() => {
   billStore.getDailySales()
@@ -109,6 +116,22 @@ onMounted(() => {
   billStore.getMonthlySales()
   billStore.getDailySalesGraph()
   billStore.getMonthlySalesGraph()
+
+  new Typed(typedText.value, {
+    strings: [
+      'Smart. Fast. Cloud POS.',
+      'Powered by EMD Dev!',
+      'Cloud POS You Can Trust.',
+      'Sell Smarter with Cloud POS!',
+      'Cloud POS, Big Results.',
+      'Your Business, On the Cloud.',
+    ],
+
+    typeSpeed: 100,
+    loop: true,
+    backSpeed: 50,
+    backDelay: 2000,
+  })
 })
 
 const formattedDate = computed(() =>
