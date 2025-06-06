@@ -29,7 +29,7 @@
 
           <q-card-section>
             <div class="row q-col-gutter-md items-end">
-              <q-expansion-item label="Filter by Date" icon="event" class="q-my-md">
+              <q-expansion-item label="Select Date" icon="filter_list" class="q-my-md">
                 <div class="q-pb-sm">
                   <q-date v-model="dateRange" range class="q-mb-md" />
                   <div class="q-mt-sm flex justify-end">

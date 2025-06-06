@@ -12,7 +12,7 @@
         <div class="row q-col-gutter-md items-end">
           <q-expansion-item
             label="Select Date"
-            icon="event"
+            icon="filter_list"
             class="q-my-md"
             v-model="datePickerExpanded"
             expand-separator

@@ -28,3 +28,19 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.typed-cursor {
+  opacity: 0.4;
+  color: white;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0;
+  }
+}

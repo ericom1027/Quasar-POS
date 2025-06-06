@@ -54,8 +54,8 @@ router.get(
 
 router.get(
   "/daily-items-sold",
-  auth.verify,
-  auth.verifyAdmin,
+  // auth.verify,
+  // auth.verifyAdmin,
   billsController.getDailyItemsSoldReport
 );
 

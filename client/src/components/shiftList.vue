@@ -54,8 +54,9 @@ onMounted(() => {
 })
 
 const formatMoney = (value) => {
-  if (value === null || value === undefined || isNaN(value)) return '0.00'
-  return Number(value).toFixed(2)
+  const num = Number(value)
+  if (isNaN(num)) return '0.00'
+  return num.toFixed(2)
 }
 
 const formatDate = (date) => {

@@ -8,7 +8,15 @@
       class="q-mb-md q-ml-sm"
       @click="printReport"
     />
+    <div class="row q-col-gutter-md items-end">
+      <q-expansion-item class="q-mb-md" label="Select Date" icon="filter_list">
+        <q-date class="q-my-md" v-model="filterDate" landscape @update:model-value="onDateChange" />
 
+        <div class="q-mt-sm flex justify-end">
+          <q-btn label="Clear Filter" color="negative" flat @click="clearFilter" />
+        </div>
+      </q-expansion-item>
+    </div>
     <q-table
       title-class="text-h6"
       title="Expenses List"
@@ -95,6 +103,22 @@ const loading = computed(() => store.loading)
 const dialog = ref(false)
 const isEdit = ref(false)
 const editingId = ref(null)
+const filterDate = ref('')
+
+function onDateChange() {
+  if (filterDate.value) {
+    console.log('Filtering date:', filterDate.value)
+    store.fetchExpenses(filterDate.value)
+  } else {
+    console.log('No filter date, fetch all')
+    store.fetchExpenses()
+  }
+}
+
+function clearFilter() {
+  filterDate.value = ''
+  store.fetchExpenses()
+}
 
 const categoryOptions = [
   { label: 'Supplies', value: 'Supplies' },
@@ -153,7 +177,7 @@ const columns = [
 ]
 
 onMounted(() => {
-  store.fetchExpenses()
+  store.fetchExpenses(filterDate.value || null)
 })
 
 function printReport() {

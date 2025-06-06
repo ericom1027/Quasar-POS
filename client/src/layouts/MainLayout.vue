@@ -236,7 +236,7 @@ const filteredLinks = computed(() => {
   if (isAdmin) {
     return [linksList.value[0], linksList.value[2], linksList.value[4], linksList.value[5]]
   } else {
-    return [linksList.value[1], linksList.value[2], linksList.value[3]]
+    return [linksList.value[1], linksList.value[3]]
   }
 })
 </script>

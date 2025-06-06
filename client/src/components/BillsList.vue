@@ -227,7 +227,7 @@ function printReceipt(bill) {
         <div class="line"></div>
 
         <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
-         <div><strong>Date:</strong> ${formattedDate}</div> 
+         <div><strong>Date:</strong> ${formattedDate}</div>
          <div><strong>Cashier:</strong> ${bill.cashierName}</div>
        <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
        ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
@@ -257,7 +257,6 @@ function printReceipt(bill) {
         <div>Cash Tendered:         ₱${bill.cash.toFixed(2)}</div>
         <div>Change:       ₱${bill.change.toFixed(2)}</div>
          <div>Senior/PWD:   ${bill.seniorOrPWD ? 'Yes' : 'No'}</div>
-
 
         <div class="line"></div>
 

@@ -202,8 +202,8 @@ exports.getDailySalesController = async (req, res) => {
 // Get Weekly Sales
 exports.getWeeklySalesController = async (req, res) => {
   try {
-    const startOfWeek = moment().startOf("week").toDate();
-    const endOfWeek = moment().endOf("week").toDate();
+    const startOfWeek = moment.tz("Asia/Manila").startOf("week").toDate();
+    const endOfWeek = moment.tz("Asia/Manila").endOf("week").toDate();
 
     const weeklyBills = await Bills.find({
       createdAt: { $gte: startOfWeek, $lte: endOfWeek },
@@ -216,8 +216,8 @@ exports.getWeeklySalesController = async (req, res) => {
     );
 
     res.status(200).json({
-      weekStart: moment(startOfWeek).format("YYYY-MM-DD"),
-      weekEnd: moment(endOfWeek).format("YYYY-MM-DD"),
+      weekStart: moment(startOfWeek).tz("Asia/Manila").format("YYYY-MM-DD"),
+      weekEnd: moment(endOfWeek).tz("Asia/Manila").format("YYYY-MM-DD"),
       totalSales,
       totalTransactions: weeklyBills.length,
       bills: weeklyBills,
@@ -233,17 +233,18 @@ exports.getMonthlySalesController = async (req, res) => {
   try {
     const { month, year } = req.query;
 
-    const targetMonth = parseInt(month || moment().format("MM")) - 1;
-    const targetYear = parseInt(year || moment().format("YYYY"));
+    const targetMonth =
+      parseInt(month || moment().tz("Asia/Manila").format("MM")) - 1;
+    const targetYear = parseInt(
+      year || moment().tz("Asia/Manila").format("YYYY")
+    );
 
-    const startOfMonth = moment()
-      .year(targetYear)
-      .month(targetMonth)
+    const startOfMonth = moment
+      .tz({ year: targetYear, month: targetMonth }, "Asia/Manila")
       .startOf("month")
       .toDate();
-    const endOfMonth = moment()
-      .year(targetYear)
-      .month(targetMonth)
+    const endOfMonth = moment
+      .tz({ year: targetYear, month: targetMonth }, "Asia/Manila")
       .endOf("month")
       .toDate();
 
@@ -258,7 +259,7 @@ exports.getMonthlySalesController = async (req, res) => {
     );
 
     res.status(200).json({
-      month: moment(startOfMonth).format("MMMM YYYY"),
+      month: moment(startOfMonth).tz("Asia/Manila").format("MMMM YYYY"),
       totalSales,
       totalTransactions: monthlyBills.length,
       bills: monthlyBills,

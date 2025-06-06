@@ -1,4 +1,5 @@
 const Expense = require("../models/Expenses");
+const moment = require("moment-timezone");
 
 exports.createExpense = async (req, res) => {
   try {
@@ -79,9 +80,33 @@ exports.deleteExpense = async (req, res) => {
   }
 };
 
+// exports.getExpenses = async (req, res) => {
+//   try {
+//     const expenses = await Expense.find().sort({ createdAt: -1 });
+//     res.json(expenses);
+//   } catch (error) {
+//     console.error("Error fetching expenses:", error);
+//     res.status(500).json({ error: "Failed to fetch expenses" });
+//   }
+// };
+
 exports.getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find().sort({ createdAt: -1 });
+    const { date } = req.query;
+
+    let filter = {};
+
+    if (date) {
+      const startOfDay = moment.tz(date, "Asia/Manila").startOf("day").toDate();
+      const endOfDay = moment.tz(date, "Asia/Manila").endOf("day").toDate();
+
+      filter.createdAt = {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      };
+    }
+
+    const expenses = await Expense.find(filter).sort({ createdAt: -1 });
     res.json(expenses);
   } catch (error) {
     console.error("Error fetching expenses:", error);

@@ -5,8 +5,8 @@
         <div class="row q-col-gutter-md items-end">
           <q-expansion-item
             v-model="filterOpen"
-            label="Filter by Date"
-            icon="event"
+            label="Select Date"
+            icon="filter_list"
             class="q-my-md"
           >
             <q-card class="q-pa-md">
@@ -76,6 +76,13 @@ const totalQty = computed(() => report.value?.overallTotalQty || 0)
 const totalSales = computed(() => report.value?.overallTotalSales || 0)
 
 const columns = [
+  {
+    name: 'date',
+    label: 'Date',
+    align: 'left',
+    field: () => selectedDate.value,
+    format: (val) => val,
+  },
   { name: 'itemName', label: 'Item', align: 'left', field: 'itemName' },
   { name: 'totalQty', label: 'Quantity Sold', align: 'center', field: 'totalQty' },
   {
@@ -124,6 +131,7 @@ const printItemsSoldReport = () => {
   reportData.value.forEach((item) => {
     tableRows += `
       <tr>
+         <td>${formattedDate}</td>
         <td>${item.itemName}</td>
         <td style="text-align:center;">${item.totalQty}</td>
         <td style="text-align:right;">₱${item.totalSales.toFixed(2)}</td>
@@ -143,6 +151,7 @@ const printItemsSoldReport = () => {
         <table>
           <thead>
             <tr>
+              <th>Date</th>
               <th>Item</th>
               <th>Quantity Sold</th>
               <th>Total Sales (₱)</th>
@@ -153,13 +162,12 @@ const printItemsSoldReport = () => {
           </tbody>
           <tfoot>
             <tr>
-              <td>Total</td>
+             <td colspan="2"><strong>Total</strong></td>
               <td style="text-align:center;">${totalQty.value}</td>
               <td style="text-align:right;">₱${totalSales.value.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>
-        <p>Generated on: ${new Date().toLocaleString()}</p>
       </body>
     </html>
   `

@@ -7,11 +7,15 @@ export const useExpensesStore = defineStore('expenses', () => {
   const loading = ref(false)
   const error = ref(null)
 
-  async function fetchExpenses() {
+  async function fetchExpenses(date = null) {
     loading.value = true
     error.value = null
     try {
-      const res = await api.get('/api/expenses')
+      let url = '/api/expenses'
+      if (date) {
+        url += `?date=${date}`
+      }
+      const res = await api.get(url)
       expenses.value = res.data
     } catch (err) {
       error.value = err.message || 'Failed to fetch expenses'

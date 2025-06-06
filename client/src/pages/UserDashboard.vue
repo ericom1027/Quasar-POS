@@ -188,10 +188,7 @@
 
     <div class="q-mt-lg q-mt-xl-md q-mt-xxl-xl flex flex-center">
       <div class="text-caption text-grey text-center">
-        <span
-          class="text-h6 text-white text-center q-mt-md q-px-md q-pa-sm text-grey"
-          ref="typedText"
-        ></span>
+        <span class="text-h6 text-center q-mt-md q-px-md q-pa-sm text-grey" ref="typedText"></span>
       </div>
     </div>
   </q-page>
@@ -202,6 +199,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useItemsStore } from '../stores/items'
 import { useCartStore } from '../stores/cart'
 import { useBillStore } from '../stores/billStore'
+import { useAuthStore } from '../stores/authStore'
 import { Notify } from 'quasar'
 import Typed from 'typed.js'
 
@@ -209,7 +207,7 @@ const cartStore = useCartStore()
 const itemsStore = useItemsStore()
 const billStore = useBillStore()
 const typedText = ref(null)
-
+const authStore = useAuthStore()
 const drawerOpen = ref(false)
 const showInvoiceModal = ref(false)
 
@@ -243,6 +241,130 @@ onMounted(() => {
     backDelay: 2000,
   })
 })
+
+function printReceipt(bill) {
+  const width = 300
+  const height = 400
+  const left = window.screenX + (window.outerWidth - width) / 2
+  const top = window.screenY + (window.outerHeight - height) / 2
+
+  const date = new Date(bill.date || bill.createdAt || Date.now())
+  const formattedDate = date.toLocaleString('en-PH', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
+  const receiptWindow = window.open(
+    '',
+    'Print Receipt',
+    `width=${width},height=${height},top=${top},left=${left},resizable=no`,
+  )
+  // const receiptWindow = window.open('', 'Print Receipt', 'width=300,height=400')
+  receiptWindow.document.write(`
+    <html>
+      <head>
+        <title>Receipt - Invoice #${bill.invoiceNumber}</title>
+      <style>
+  @media print {
+    html, body {
+      width: 80mm;
+      margin: 0;
+      padding: 0;
+      font-size: 20px;
+      page-break-after: auto;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+  }
+
+  body {
+    font-family: monospace;
+    font-size: 18px;
+    width: 80mm;
+    padding: 0.5mm 3mm 3mm 3mm;
+    margin: 0;
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .line {
+    border-top: 1px dashed #000;
+    margin: 5px 0;
+  }
+
+  .items, .totals {
+    margin: 5px 0;
+  }
+
+  .footer {
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>
+
+      </head>
+      <body>
+        <div class="center">
+          <div>**RAZON'S OF MALOLOS**</div>
+          <div>Unit 7 Twinz Plaza, Bulihan</div>
+           <div>MacArthur Highway, Malolos, Bulacan</div>
+          <div>Contact No: 0951-544-3604</div>
+        </div>
+
+        <div class="line"></div>
+
+        <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
+         <div><strong>Date:</strong> ${formattedDate}</div>
+         <div><strong>Cashier:</strong> ${bill.cashierName}</div>
+       <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
+       ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
+        <div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>
+        <div class="line"></div>
+
+        <div class="items">
+          ${bill.cartItems
+            .map(
+              (item) => `
+            <div>
+              ${item.itemName}<br/>
+              x${item.qty}
+            </div>
+          `,
+            )
+            .join('')}
+        </div>
+
+        <div class="line"></div>
+
+        <div>Subtotal:     ₱${bill.subTotal.toFixed(2)}</div>
+        <div>VAT Sales:    ₱${bill.vatSales.toFixed(2)}</div>
+        <div>VAT Amount:   ₱${bill.vatAmount.toFixed(2)}</div>
+        <div>Discount(20%): ₱${bill.discount.toFixed(2)}</div>
+        <div>Total Amount:        ₱${bill.totalAmount.toFixed(2)}</div>
+        <div>Cash Tendered:         ₱${bill.cash.toFixed(2)}</div>
+        <div>Change:       ₱${bill.change.toFixed(2)}</div>
+         <div>Senior/PWD:   ${bill.seniorOrPWD ? 'Yes' : 'No'}</div>
+
+        <div class="line"></div>
+
+        <div class="footer">
+          Thank you for your purchase!<br/>
+          This is a temporary receipt. Please keep it for your records.
+        </div>
+      </body>
+    </html>
+  `)
+  receiptWindow.document.close()
+  receiptWindow.focus()
+  receiptWindow.print()
+}
 
 function getImageUrl(image) {
   if (!image) return 'https://via.placeholder.com/150'
@@ -307,11 +429,18 @@ const confirmCheckout = async () => {
         price: item.price,
         qty: item.quantity,
       })),
+      cashierName: authStore.user.firstname + ' ' + authStore.user.lastname,
     }
 
-    await billStore.submitBill(billData)
+    const savedBill = await billStore.submitBill(billData)
+
+    if (!savedBill) {
+      Notify.create({ type: 'negative', message: 'No bill found, printing will not proceed.' })
+      return
+    }
 
     showInvoiceModal.value = false
+    printReceipt(savedBill)
     cartStore.clearCart()
     drawerOpen.value = false
     Notify.create({

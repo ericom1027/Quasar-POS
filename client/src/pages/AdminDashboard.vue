@@ -92,10 +92,7 @@
       </div>
     </div>
 
-    <span
-      class="text-h6 text-white text-center q-mt-md q-px-md q-pa-sm text-grey"
-      ref="typedText"
-    ></span>
+    <span class="text-h6 text-center q-mt-md q-px-md q-pa-sm text-grey" ref="typedText"></span>
   </q-page>
 </template>
 
