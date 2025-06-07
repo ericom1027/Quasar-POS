@@ -326,6 +326,8 @@ function printReceipt(bill) {
         <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
          <div><strong>Date:</strong> ${formattedDate}</div>
          <div><strong>Cashier:</strong> ${bill.cashierName}</div>
+          <div><strong>Customer Name:</strong> ${bill.customerName}</div>
+          <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
        <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
        ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
         <div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>
