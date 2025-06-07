@@ -179,7 +179,7 @@ function printReceipt(bill) {
       width: 80mm;
       margin: 0;
       padding: 0;
-      font-size: 20px;
+      font-size: 16px;
       page-break-after: auto;
     }
 
@@ -190,7 +190,7 @@ function printReceipt(bill) {
 
   body {
     font-family: monospace;
-    font-size: 18px;
+    font-size: 13.3px;
     width: 80mm;
     padding: 0.5mm 3mm 3mm 3mm;
     margin: 0;

@@ -150,6 +150,7 @@ export default defineConfig((/* ctx */) => {
 
     pwa: {
       workboxMode: 'GenerateSW',
+      injectPwaMetaTags: true,
       manifest: {
         name: 'POS ',
         short_name: 'POS',
@@ -161,17 +162,18 @@ export default defineConfig((/* ctx */) => {
 
         icons: [
           {
-            src: '/logo.png',
+            src: 'icons/logo-128x128.png',
             sizes: '128x128',
             type: 'image/png',
           },
+
           {
-            src: 'logo.png',
+            src: 'icons/logo-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'logo.png',
+            src: 'icons/logo-512x512.png',
             sizes: '512x512',
             type: 'image/png',
           },
