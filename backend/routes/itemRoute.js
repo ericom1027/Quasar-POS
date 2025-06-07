@@ -8,11 +8,14 @@ const router = express.Router();
 
 router.post(
   "/add-item",
+
+  auth.verify,
+  auth.verifyAdmin,
   upload.single("image"),
   ItemsController.addItemController
 );
 
-router.get("/get", ItemsController.getItems);
+router.get("/get", auth.verify, ItemsController.getItems);
 
 router.put(
   "/items/:id",

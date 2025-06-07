@@ -58,13 +58,13 @@
       </div>
 
       <!-- Right Side: Cart Drawer always visible -->
-      <div v-if="drawerOpen" class="col-auto" style="width: 320px">
+      <div v-if="uiStore.drawerOpen" class="col-auto" style="width: 320px">
         <q-card flat class="bg-white shadow-2" style="flex-grow: 1">
           <q-card-section>
             <div class="row items-center q-gutter-sm" style="font-size: 1.25rem">
               <q-icon name="shopping_cart" size="24px" />
               <span>Cart Order List ({{ cartStore.totalItems }})</span>
-              <q-btn dense flat icon="close" @click="drawerOpen = false" />
+              <q-btn dense flat icon="close" @click="uiStore.closeDrawer" />
             </div>
 
             <div v-for="item in cartStore.items" :key="item._id" class="q-pa-sm q-gutter-sm">
@@ -167,12 +167,13 @@
             Discount (20%): ₱{{ discount.toFixed(2) }}
           </div>
           <div class="text-subtitle1">Total Amount: ₱{{ totalAmount.toFixed(2) }}</div>
-          <div class="text-body2">Cash Tendered: ₱{{ form.cash.toFixed(2) }}</div>
+          <div class="text-body2">Cash Tendered: ₱{{ Number(form.cash).toFixed(2) }}</div>
           <div class="text-body2">Change: ₱{{ change.toFixed(2) }}</div>
         </div>
 
         <q-card-actions align="right">
-          <q-btn flat label="Cancel" color="primary" v-close-popup />
+          <q-btn flat label="Cancel" color="primary" @click="resetForm" v-close-popup />
+
           <q-btn
             label="Checkout"
             color="positive"
@@ -202,13 +203,15 @@ import { useBillStore } from '../stores/billStore'
 import { useAuthStore } from '../stores/authStore'
 import { Notify } from 'quasar'
 import Typed from 'typed.js'
+import { useUiStore } from '../stores/uiStore'
+const uiStore = useUiStore()
 
 const cartStore = useCartStore()
 const itemsStore = useItemsStore()
 const billStore = useBillStore()
 const typedText = ref(null)
 const authStore = useAuthStore()
-const drawerOpen = ref(false)
+
 const showInvoiceModal = ref(false)
 
 const form = ref({
@@ -374,7 +377,18 @@ function getImageUrl(image) {
 function addToCart(item) {
   cartStore.addToCart(item)
   Notify.create({ type: 'positive', message: `${item.itemName} added to cart.` })
-  drawerOpen.value = true
+  uiStore.openDrawer()
+}
+
+function resetForm() {
+  form.value = {
+    customerName: '',
+    customerNumber: '',
+    paymentMode: '',
+    cash: 0,
+    isSeniorOrPWD: false,
+    gcashReferenceNumber: '',
+  }
 }
 
 const categories = computed(() => {
@@ -442,7 +456,7 @@ const confirmCheckout = async () => {
     showInvoiceModal.value = false
     printReceipt(savedBill)
     cartStore.clearCart()
-    drawerOpen.value = false
+    uiStore.closeDrawer()
     Notify.create({
       type: 'positive',
       position: 'bottom-right',

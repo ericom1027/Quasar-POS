@@ -10,7 +10,7 @@
           v-if="authStore.user && authStore.user.isAdmin === false"
           flat
           dense
-          @click="$router.push('/dashboard')"
+          @click="uiStore.openDrawer()"
         >
           <q-icon name="shopping_cart" size="24px" />
           <q-badge v-if="cartStore.totalItems > 0" floating color="red" transparent class="q-ml-xs">
@@ -162,6 +162,8 @@ import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from 'stores/authStore'
 import { useCartStore } from 'stores/cart'
+import { useUiStore } from '../stores/uiStore'
+const uiStore = useUiStore()
 
 const cartStore = useCartStore()
 const router = useRouter()
