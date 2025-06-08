@@ -364,7 +364,11 @@ function printReceipt(bill) {
 
   receiptWindow.document.close()
   receiptWindow.focus()
-  receiptWindow.print()
+
+  receiptWindow.onload = () => {
+    receiptWindow.print()
+    receiptWindow.close()
+  }
 }
 
 function getImageUrl(image) {
