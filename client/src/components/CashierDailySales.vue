@@ -117,7 +117,7 @@ function printReport() {
       <td>₱${Number(row.totalSales || 0).toFixed(2)}</td>
       <td style="text-align:center;">${row.transactions || 0}</td>
     </tr>
-    <tr>
+     <tr>
       <td colspan="3" style="padding-left: 20px; font-size: 0.9em; color: #555;">
         <strong>Items Sold:</strong> ${itemList}
       </td>
@@ -201,17 +201,16 @@ const columns = [
   },
 
   {
-    name: 'cartItems',
-    label: 'Item Name',
-    field: (row) => row.cartItems.map((item) => `${item.itemName} (qty${item.qty})`).join(', '),
-    align: 'left',
-  },
-
-  {
     name: 'totalSales',
     label: 'Total Sales',
     field: 'totalSales',
     sortable: true,
+    align: 'left',
+  },
+  {
+    name: 'cartItems',
+    label: 'Items Sold',
+    field: (row) => row.cartItems.map((item) => `${item.itemName} (qty${item.qty})`).join(', '),
     align: 'left',
   },
   {
