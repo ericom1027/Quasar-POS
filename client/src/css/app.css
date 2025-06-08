@@ -44,3 +44,9 @@
     opacity: 0;
   }
 }
+
+.row1 {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
