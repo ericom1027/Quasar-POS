@@ -296,6 +296,13 @@ const handleVoid = async (invoiceNumber) => {
 const columns = [
   { name: 'invoiceNumber', label: 'Invoice No.', field: 'invoiceNumber', align: 'left' },
   { name: 'items', label: 'Items', field: 'cartItems', align: 'left' },
+  { name: 'paymentMode', label: 'Payment mode', field: 'paymentMode', align: 'left' },
+  {
+    name: 'gcashReferenceNumber',
+    label: 'Gcash ref no. mode',
+    field: 'gcashReferenceNumber',
+    align: 'left',
+  },
   { name: 'cash', label: 'Cash Tendered (₱)', field: 'cash', align: 'left' },
   { name: 'change', label: 'Change (₱)', field: 'change', align: 'left' },
   { name: 'totalAmount', label: 'Total Amount (₱)', field: 'totalAmount', align: 'left' },

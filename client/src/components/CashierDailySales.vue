@@ -43,7 +43,7 @@
       <q-card-section v-else>
         <q-btn label="Print" color="primary" icon="print" class="q-mb-md" @click="printReport" />
         <q-table
-          :rows="salesData.sales || []"
+          :rows="salesData?.sales ?? []"
           :columns="columns"
           row-key="cashierName"
           flat
@@ -90,9 +90,11 @@ function clearFilter() {
 }
 
 const salesData = computed(() => {
+  const data = salesStore.cashierDailySales || {}
   return {
     date: selectedDate.value,
-    ...(salesStore.cashierDailySales || {}),
+    sales: data.sales || [],
+    ...data,
   }
 })
 
@@ -106,13 +108,21 @@ function printReport() {
 
   let rowsHtml = ''
   salesRows.forEach((row) => {
+    const itemList =
+      row.cartItems?.map((item) => `${item.itemName} (qty${item.qty})`).join(', ') || 'No items'
+
     rowsHtml += `
-      <tr>
-        <td>${row.cashierName || ''}</td>
-        <td>₱${Number(row.totalSales || 0).toFixed(2)}</td>
-        <td style="text-align:center;">${row.transactions || 0}</td>
-      </tr>
-    `
+    <tr>
+      <td>${row.cashierName || ''}</td>
+      <td>₱${Number(row.totalSales || 0).toFixed(2)}</td>
+      <td style="text-align:center;">${row.transactions || 0}</td>
+    </tr>
+    <tr>
+      <td colspan="3" style="padding-left: 20px; font-size: 0.9em; color: #555;">
+        <strong>Items Sold:</strong> ${itemList}
+      </td>
+    </tr>
+  `
   })
 
   const html = `
@@ -189,6 +199,14 @@ const columns = [
     sortable: true,
     align: 'left',
   },
+
+  {
+    name: 'cartItems',
+    label: 'Item Name',
+    field: (row) => row.cartItems.map((item) => `${item.itemName} (qty${item.qty})`).join(', '),
+    align: 'left',
+  },
+
   {
     name: 'totalSales',
     label: 'Total Sales',

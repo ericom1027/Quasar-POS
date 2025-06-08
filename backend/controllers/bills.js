@@ -428,6 +428,7 @@ exports.getDailySalesPerCashier = async (req, res) => {
         cashierName,
         totalSales: _.sumBy(bills, "totalAmount"),
         transactions: bills.length,
+        cartItems: bills.flatMap((bill) => bill.cartItems || []),
       }))
       .value();
 
