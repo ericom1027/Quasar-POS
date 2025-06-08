@@ -348,13 +348,13 @@ function printReceipt(bill) {
 
         <div class="line"></div>
 
-        <div>Subtotal:     &#8369;${bill.subTotal.toFixed(2)}</div>
-        <div>VAT Sales:    &#8369;${bill.vatSales.toFixed(2)}</div>
-        <div>VAT Amount:   &#8369;${bill.vatAmount.toFixed(2)}</div>
-        <div>Discount(20%): &#8369;${bill.discount.toFixed(2)}</div>
-        <div>Total Amount:        &#8369;${bill.totalAmount.toFixed(2)}</div>
-        <div>Cash Tendered:         &#8369;${bill.cash.toFixed(2)}</div>
-        <div>Change:       &#8369;${bill.change.toFixed(2)}</div>
+        <div>Subtotal:     PHP${bill.subTotal.toFixed(2)}</div>
+        <div>VAT Sales:    PHP${bill.vatSales.toFixed(2)}</div>
+        <div>VAT Amount:   PHP${bill.vatAmount.toFixed(2)}</div>
+        <div>Discount(20%): PHP${bill.discount.toFixed(2)}</div>
+        <div>Total Amount:        PHP${bill.totalAmount.toFixed(2)}</div>
+        <div>Cash Tendered:         PHP${bill.cash.toFixed(2)}</div>
+        <div>Change:       PHP${bill.change.toFixed(2)}</div>
          <div>Senior/PWD:   ${bill.seniorOrPWD ? 'Yes' : 'No'}</div>
 
         <div class="line"></div>
