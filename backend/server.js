@@ -18,8 +18,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:9000",
-      "https://quasar-pos-1.onrender.com",
-      "https://quasar-pos.onrender.com",
+      "https://razons-pos.onrender.com",
+      "https://razons.onrender.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],

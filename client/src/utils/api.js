@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({
   // baseURL: 'http://localhost:4000',
-  baseURL: 'https://quasar-pos-1.onrender.com',
+  baseURL: 'https://razons-pos.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
