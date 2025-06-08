@@ -246,11 +246,6 @@ onMounted(() => {
 })
 
 function printReceipt(bill) {
-  const width = 300
-  const height = 400
-  const left = window.screenX + (window.outerWidth - width) / 2
-  const top = window.screenY + (window.outerHeight - height) / 2
-
   const date = new Date(bill.date || bill.createdAt || Date.now())
   const formattedDate = date.toLocaleString('en-PH', {
     year: 'numeric',
@@ -260,102 +255,102 @@ function printReceipt(bill) {
     minute: '2-digit',
   })
 
-  const receiptWindow = window.open(
-    '',
-    'Print Receipt',
-    `width=${width},height=${height},top=${top},left=${left},resizable=no`,
-  )
-  // const receiptWindow = window.open('', 'Print Receipt', 'width=300,height=400')
+  const receiptWindow = window.open('', 'Print Receipt', 'resizable=no')
+
   receiptWindow.document.write(`
     <html>
       <head>
         <title>Receipt - Invoice #${bill.invoiceNumber}</title>
-      <style>
-  @media print {
-    html, body {
-      width: 80mm;
-      margin: 0;
-      padding: 0;
-      font-size: 16px;
-      page-break-after: auto;
-    }
+        <style>
+          @page {
+            size: 80mm auto;
+            margin: 0;
+          }
 
-    * {
-      box-sizing: border-box;
-    }
-  }
+          @media print {
+            html, body {
+              width: 80mm;
+              margin: 0;
+              padding: 0;
+              font-size: 13px;
+              font-family: monospace;
+            }
 
-  body {
-    font-family: monospace;
-    font-size: 13.3px;
-    width: 80mm;
-    padding: 0.5mm 3mm 3mm 3mm;
-    margin: 0;
-  }
+            * {
+              box-sizing: border-box;
+            }
+          }
 
-  .center {
-    text-align: center;
-  }
+          body {
+            font-family: monospace;
+            font-size: 13px;
+            width: 80mm;
+            padding: 1mm 3mm 3mm 3mm;
+            margin: 0;
+          }
 
-  .line {
-    border-top: 1px dashed #000;
-    margin: 5px 0;
-  }
+          .center {
+            text-align: center;
+          }
 
-  .items, .totals {
-    margin: 5px 0;
-  }
+          .line {
+            border-top: 1px dashed #000;
+            margin: 5px 0;
+          }
 
-  .footer {
-    margin-top: 10px;
-    text-align: center;
-  }
-</style>
+          .items, .totals {
+            margin: 5px 0;
+          }
 
+          .footer {
+            margin-top: 10px;
+            text-align: center;
+          }
+        </style>
       </head>
       <body>
         <div class="center">
           <div>**RAZON'S OF MALOLOS**</div>
           <div>Unit 7 Twinz Plaza, Bulihan</div>
-           <div>MacArthur Highway, Malolos, Bulacan</div>
+          <div>MacArthur Highway, Malolos, Bulacan</div>
           <div>Contact No: 0951-544-3604</div>
         </div>
 
         <div class="line"></div>
 
         <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
-         <div><strong>Date:</strong> ${formattedDate}</div>
-         <div><strong>Cashier:</strong> ${bill.cashierName}</div>
-          <div><strong>Customer Name:</strong> ${bill.customerName}</div>
-          <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
-       <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
-       ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
-        <div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>
+        <div><strong>Date:</strong> ${formattedDate}</div>
+        <div><strong>Cashier:</strong> ${bill.cashierName}</div>
+        <div><strong>Customer Name:</strong> ${bill.customerName}</div>
+        <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
+        <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
+        ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
+
         <div class="line"></div>
 
         <div class="items">
           ${bill.cartItems
             .map(
               (item) => `
-            <div>
-              ${item.itemName}<br/>
-              x${item.qty}
-            </div>
-          `,
+              <div>
+                ${item.itemName}<br/>
+                x${item.qty}
+              </div>
+            `,
             )
             .join('')}
         </div>
 
         <div class="line"></div>
 
-        <div>Subtotal:     PHP${bill.subTotal.toFixed(2)}</div>
-        <div>VAT Sales:    PHP${bill.vatSales.toFixed(2)}</div>
-        <div>VAT Amount:   PHP${bill.vatAmount.toFixed(2)}</div>
-        <div>Discount(20%): PHP${bill.discount.toFixed(2)}</div>
-        <div>Total Amount:        PHP${bill.totalAmount.toFixed(2)}</div>
-        <div>Cash Tendered:         PHP${bill.cash.toFixed(2)}</div>
-        <div>Change:       PHP${bill.change.toFixed(2)}</div>
-         <div>Senior/PWD:   ${bill.seniorOrPWD ? 'Yes' : 'No'}</div>
+        <div>Subtotal:        PHP ${bill.subTotal.toFixed(2)}</div>
+        <div>VAT Sales:       PHP ${bill.vatSales.toFixed(2)}</div>
+        <div>VAT Amount:      PHP ${bill.vatAmount.toFixed(2)}</div>
+        <div>Discount(20%):   PHP ${bill.discount.toFixed(2)}</div>
+        <div><strong>Total:   PHP ${bill.totalAmount.toFixed(2)}</strong></div>
+        <div>Cash Tendered:   PHP ${bill.cash.toFixed(2)}</div>
+        <div>Change:          PHP ${bill.change.toFixed(2)}</div>
+        <div>Senior/PWD:      ${bill.seniorOrPWD ? 'Yes' : 'No'}</div>
 
         <div class="line"></div>
 
@@ -366,6 +361,7 @@ function printReceipt(bill) {
       </body>
     </html>
   `)
+
   receiptWindow.document.close()
   receiptWindow.focus()
   receiptWindow.print()
