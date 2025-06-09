@@ -42,7 +42,11 @@
                 />
               </div>
               <q-card-section style="padding: 8px">
-                <div class="text-subtitle2 text-bold" style="line-height: 1.1">
+                <div
+                  class="text-subtitle2 text-bold"
+                  :class="{ 'text-white': isDark, 'text-black': !isDark }"
+                  style="line-height: 1.1"
+                >
                   {{ item.itemName }}
                 </div>
                 <div v-if="item.size" class="text-caption text-grey" style="margin-top: 2px">
@@ -61,7 +65,11 @@
       <div v-if="uiStore.drawerOpen" class="col-auto" style="width: 320px">
         <q-card flat class="bg-white shadow-2" style="flex-grow: 1">
           <q-card-section>
-            <div class="row items-center q-gutter-sm" style="font-size: 1.25rem">
+            <div
+              class="row items-center q-gutter-sm"
+              style="font-size: 1.25rem"
+              :class="{ 'text-white': isDark, 'text-black': !isDark }"
+            >
               <q-icon name="shopping_cart" size="24px" />
               <span>Cart Order List ({{ cartStore.totalItems }})</span>
               <q-btn dense flat icon="close" @click="uiStore.closeDrawer" />
@@ -69,13 +77,19 @@
 
             <div v-for="item in cartStore.items" :key="item._id" class="q-pa-sm q-gutter-sm">
               <div class="row items-center">
-                <div class="col-6">{{ item.itemName }} - ₱{{ item.price.toFixed(2) }}</div>
+                <div class="col-6" :class="{ 'text-white': isDark, 'text-black': !isDark }">
+                  {{ item.itemName }} - ₱{{ item.price.toFixed(2) }}
+                </div>
                 <div class="col-3">
                   <q-input
                     dense
                     v-model.number="item.quantity"
                     type="number"
                     min="1"
+                    :input-class="isDark ? 'text-white' : 'text-black'"
+                    :label-color="isDark ? 'white' : 'black'"
+                    :color="isDark ? 'white' : 'black'"
+                    :dark="isDark"
                     @change="cartStore.updateQuantity(item._id, item.quantity)"
                   />
                 </div>
@@ -91,7 +105,9 @@
             </div>
 
             <div class="q-mt-md text-right">
-              <div class="text-subtitle1">Total: ₱{{ cartStore.totalPrice.toFixed(2) }}</div>
+              <div class="text-subtitle1" :class="{ 'text-white': isDark, 'text-black': !isDark }">
+                Total: ₱{{ cartStore.totalPrice.toFixed(2) }}
+              </div>
               <q-btn
                 label="Proceed to Checkout"
                 color="primary"

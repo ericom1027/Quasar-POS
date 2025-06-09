@@ -42,8 +42,8 @@
     </q-table>
 
     <!-- Add/Edit Dialog -->
-    <q-dialog v-model="dialogVisible">
-      <q-card style="min-width: 400px">
+    <q-dialog v-model="dialogVisible" persistent>
+      <q-card class="q-pa-md" style="width: 100%; max-width: 500px">
         <q-card-section>
           <div class="text-h6">{{ isEditing ? 'Edit Item' : 'Add Item' }}</div>
         </q-card-section>
@@ -100,7 +100,6 @@ const uploaderRef = ref(null)
 
 const search = ref('')
 
-// Computed filtered items based on search input
 const filteredItems = computed(() => {
   if (!search.value) return itemsStore.items
   return itemsStore.items.filter((item) =>

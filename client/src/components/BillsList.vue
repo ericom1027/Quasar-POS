@@ -299,7 +299,7 @@ const columns = [
   { name: 'paymentMode', label: 'Payment mode', field: 'paymentMode', align: 'left' },
   {
     name: 'gcashReferenceNumber',
-    label: 'Gcash ref no. mode',
+    label: 'GCash Payment Reference',
     field: 'gcashReferenceNumber',
     align: 'left',
   },
