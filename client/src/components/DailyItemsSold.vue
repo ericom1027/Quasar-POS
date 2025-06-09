@@ -84,6 +84,7 @@ const columns = [
     format: (val) => val,
   },
   { name: 'itemName', label: 'Item', align: 'left', field: 'itemName' },
+  { name: 'price', label: 'Price', align: 'left', field: (row) => row.price.toFixed(2) },
   { name: 'totalQty', label: 'Quantity Sold', align: 'center', field: 'totalQty' },
   {
     name: 'totalSales',
@@ -131,8 +132,9 @@ const printItemsSoldReport = () => {
   reportData.value.forEach((item) => {
     tableRows += `
       <tr>
-         <td>${formattedDate}</td>
+        <td>${formattedDate}</td>
         <td>${item.itemName}</td>
+        <td>${item.price.toFixed(2)}</td>
         <td style="text-align:center;">${item.totalQty}</td>
         <td style="text-align:right;">₱${item.totalSales.toFixed(2)}</td>
       </tr>
@@ -153,6 +155,7 @@ const printItemsSoldReport = () => {
             <tr>
               <th>Date</th>
               <th>Item</th>
+               <th>Price</th>
               <th>Quantity Sold</th>
               <th>Total Sales (₱)</th>
             </tr>
@@ -162,7 +165,7 @@ const printItemsSoldReport = () => {
           </tbody>
           <tfoot>
             <tr>
-             <td colspan="2"><strong>Total</strong></td>
+             <td colspan="3"><strong>Total</strong></td>
               <td style="text-align:center;">${totalQty.value}</td>
               <td style="text-align:right;">₱${totalSales.value.toFixed(2)}</td>
             </tr>

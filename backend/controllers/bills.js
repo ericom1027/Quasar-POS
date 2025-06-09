@@ -463,6 +463,7 @@ exports.getDailyItemsSoldReport = async (req, res) => {
           totalSales: {
             $sum: { $multiply: ["$cartItems.qty", "$cartItems.price"] },
           },
+          price: { $first: "$cartItems.price" },
         },
       },
       {
@@ -470,6 +471,7 @@ exports.getDailyItemsSoldReport = async (req, res) => {
           itemName: "$_id",
           totalQty: 1,
           totalSales: 1,
+          price: 1,
           _id: 0,
         },
       },
