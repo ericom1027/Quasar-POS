@@ -8,10 +8,6 @@ exports.addItemController = (req, res) => {
     image: req.file ? req.file.filename : null,
   };
 
-  // if (req.body.category !== "rice" && req.body.category) {
-  //   newItemData.size = req.body.size;
-  // }
-
   let newItem = new itemModel(newItemData);
 
   itemModel
