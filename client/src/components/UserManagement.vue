@@ -3,14 +3,28 @@
     <q-card>
       <q-card-section>
         <div class="text-h6">User Registration</div>
-        <q-form @submit.prevent="registerUser" class="q-gutter-md">
-          <q-input v-model="form.firstname" label="First Name" />
-          <q-input v-model="form.lastname" label="Last Name" />
-          <q-input v-model="form.email" label="Email" type="email" />
+        <q-form @submit.prevent="registerUser" class="q-gutter-md" ref="registerForm">
+          <q-input
+            v-model="form.firstname"
+            label="First Name"
+            :rules="[(val) => !!val || 'First name is required']"
+          />
+          <q-input
+            v-model="form.lastname"
+            label="Last Name"
+            :rules="[(val) => !!val || 'Last name is required']"
+          />
+          <q-input
+            v-model="form.email"
+            label="Email"
+            type="email"
+            :rules="[(val) => !!val || 'Email is required']"
+          />
           <q-input
             v-model="form.password"
             :type="showPassword ? 'text' : 'password'"
             label="Password"
+            :rules="[(val) => !!val || 'Password is required']"
           >
             <template v-slot:append>
               <q-icon
@@ -95,9 +109,14 @@
               option-value="value"
               emit-value
               map-options
+              :rules="[(val) => !!val || 'Status is required']"
             />
 
-            <q-input v-model="editForm.mobileNo" label="Mobile Number" />
+            <q-input
+              v-model="editForm.mobileNo"
+              label="Mobile Number"
+              :rules="[(val) => !!val || 'Mobile number is required']"
+            />
             <q-toggle v-model="editForm.isAdmin" label="Admin User" />
 
             <!-- Button row -->
@@ -199,9 +218,14 @@ export default {
     },
 
     async registerUser() {
+      const isValid = await this.$refs.registerForm.validate()
+      if (!isValid) return
+
       try {
         await api.post('/api/register', this.form)
-        notifySuccess('User registered successfully'), this.resetForm()
+        notifySuccess('User registered successfully')
+        this.resetForm()
+        this.$refs.registerForm.resetValidation()
         this.getUsers()
       } catch (err) {
         notifyError({
@@ -209,6 +233,7 @@ export default {
         })
       }
     },
+
     // async deleteUser(id) {
     //   if (confirm('Are you sure you want to delete this user?')) {
     //     try {

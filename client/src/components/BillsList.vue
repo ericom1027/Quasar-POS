@@ -243,7 +243,7 @@ function printReceipt(bill) {
             <div>
               ${item.itemName}<br/>
               x${item.qty}
-              PHP:${item.price}
+              PHP ${item.price.toFixed(2)}
             </div>
           `,
             )
