@@ -64,51 +64,58 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.deleteUser = async (req, res) => {
-  const { id } = req.params;
+// exports.deleteUser = async (req, res) => {
+//   const { id } = req.params;
 
-  if (req.user.id === id) {
-    return res.status(403).json({
-      message: "You cannot delete your own admin account",
-    });
-  }
+//   if (req.user.id === id) {
+//     return res.status(403).json({
+//       message: "You cannot delete your own admin account",
+//     });
+//   }
 
-  try {
-    const user = await User.findByIdAndDelete(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.status(200).json({ message: "User deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting user:", error.message);
-    res.status(500).json({ message: "Server error" });
-  }
-};
+//   try {
+//     const user = await User.findByIdAndDelete(id);
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+//     res.status(200).json({ message: "User deleted successfully" });
+//   } catch (error) {
+//     console.error("Error deleting user:", error.message);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
-  const { firstname, lastname, email, password, mobileNo } = req.body;
+  const { firstname, lastname, email, password, mobileNo, status } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const updateData = {
+      firstname,
+      lastname,
+      email,
+      mobileNo,
+    };
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      {
-        firstname,
-        lastname,
-        email,
-        password: hashedPassword,
-        mobileNo,
-      },
-      { new: true }
-    );
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    if (status) {
+      updateData.status = status;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: "User updated successfully" });
+    res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
     console.error("Error updating user:", error.message);
     res.status(500).json({ message: "Server error" });
@@ -119,6 +126,12 @@ exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(401).json({ message: "Invalid credentials" });
+
+    if (user.status !== "active") {
+      return res.status(403).json({
+        message: `Account is ${user.status}. Please contact admin.`,
+      });
+    }
 
     const isPasswordValid = await bcrypt.compare(
       req.body.password,
@@ -209,31 +222,3 @@ exports.logout = (req, res) => {
   res.clearCookie("refreshToken");
   return res.json({ message: "Logged out successfully" });
 };
-
-// exports.logout = async (req, res) => {
-//   try {
-//     const user = req.user;
-
-//     if (!user.isAdmin) {
-//       const cashierName = `${user.firstname} ${user.lastname}`.trim();
-
-//       const openShift = await Shift.findOne({
-//         cashierName,
-//         isClosed: false,
-//       });
-
-//       if (openShift) {
-//         return res.status(403).json({
-//           message:
-//             "Hindi ka makaka-logout hangga’t hindi mo sine-close ang iyong shift.",
-//         });
-//       }
-//     }
-
-//     res.clearCookie("refreshToken");
-//     return res.json({ message: "Logged out successfully" });
-//   } catch (error) {
-//     console.error("Logout error:", error);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };

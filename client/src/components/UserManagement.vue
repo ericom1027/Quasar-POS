@@ -21,6 +21,16 @@
             </template>
           </q-input>
 
+          <q-select
+            v-model="form.status"
+            label="Status"
+            :options="statusOptions"
+            option-label="label"
+            option-value="value"
+            emit-value
+            map-options
+          />
+
           <q-input v-model="form.mobileNo" label="Mobile Number" />
           <q-toggle v-model="form.isAdmin" label="Admin User" />
           <q-btn label="Register" type="submit" color="primary" />
@@ -34,10 +44,20 @@
       <q-card-section>
         <div class="text-h6">All Users</div>
         <q-table :rows="users" :columns="columns" row-key="_id" flat bordered>
+          <template v-slot:body-cell-status="props">
+            <q-td align="center">
+              <q-badge
+                :color="getStatusColor(props.row.status)"
+                :label="props.row.status"
+                class="text-capitalize"
+              />
+            </q-td>
+          </template>
+
           <template v-slot:body-cell-actions="props">
             <q-td align="center">
               <q-btn flat dense color="primary" icon="edit" @click="editUser(props.row)" />
-              <q-btn flat dense color="negative" icon="delete" @click="deleteUser(props.row._id)" />
+              <!-- <q-btn flat dense color="negative" icon="delete" @click="deleteUser(props.row._id)" /> -->
             </q-td>
           </template>
         </q-table>
@@ -47,7 +67,7 @@
     <!-- Edit Dialog -->
     <q-dialog v-model="editDialog" persistent>
       <q-card style="min-width: 300px">
-        <q-card-section style="width: 400px; height: 450px">
+        <q-card-section style="width: 400px; height: 500px">
           <div class="text-h6">Edit User</div>
           <q-form @submit.prevent="updateUser">
             <q-input v-model="editForm.firstname" label="First Name" />
@@ -66,6 +86,16 @@
                 />
               </template>
             </q-input>
+
+            <q-select
+              v-model="editForm.status"
+              label="Status"
+              :options="statusOptions"
+              option-label="label"
+              option-value="value"
+              emit-value
+              map-options
+            />
 
             <q-input v-model="editForm.mobileNo" label="Mobile Number" />
             <q-toggle v-model="editForm.isAdmin" label="Admin User" />
@@ -105,6 +135,7 @@ export default {
         password: '',
         mobileNo: '',
         isAdmin: false,
+        status: '',
       },
       editForm: {
         _id: '',
@@ -114,7 +145,16 @@ export default {
         password: '',
         mobileNo: '',
         isAdmin: false,
+        status: '',
       },
+
+      statusOptions: [
+        { label: 'Select Status', value: '' },
+        { label: 'Active', value: 'active' },
+        { label: 'Inactive', value: 'inactive' },
+        { label: 'Resigned', value: 'resigned' },
+      ],
+
       editDialog: false,
       users: [],
       columns: [
@@ -128,10 +168,12 @@ export default {
           field: 'isAdmin',
           format: (val) => (val ? 'Yes' : 'No'),
         },
+        { name: 'status', label: 'Status', field: 'status' },
         { name: 'actions', label: 'Actions', field: 'actions', sortable: false },
       ],
     }
   },
+
   methods: {
     async getUsers() {
       try {
@@ -142,6 +184,20 @@ export default {
         notifyError({ type: 'negative', message: 'Failed to fetch users' })
       }
     },
+
+    getStatusColor(status) {
+      switch (status) {
+        case 'active':
+          return 'green'
+        case 'inactive':
+          return 'grey'
+        case 'resigned':
+          return 'red'
+        default:
+          return 'blue'
+      }
+    },
+
     async registerUser() {
       try {
         await api.post('/api/register', this.form)
@@ -153,24 +209,24 @@ export default {
         })
       }
     },
-    async deleteUser(id) {
-      if (confirm('Are you sure you want to delete this user?')) {
-        try {
-          await api.delete(`/api/delete/${id}`)
-          notifySuccess('User deleted successfully')
-          this.getUsers()
-        } catch (error) {
-          console.error('Error deleting user:', error)
+    // async deleteUser(id) {
+    //   if (confirm('Are you sure you want to delete this user?')) {
+    //     try {
+    //       await api.delete(`/api/delete/${id}`)
+    //       notifySuccess('User deleted successfully')
+    //       this.getUsers()
+    //     } catch (error) {
+    //       console.error('Error deleting user:', error)
 
-          const errorMessage =
-            error.response && error.response.data && error.response.data.message
-              ? error.response.data.message
-              : 'Error deleting user'
+    //       const errorMessage =
+    //         error.response && error.response.data && error.response.data.message
+    //           ? error.response.data.message
+    //           : 'Error deleting user'
 
-          notifyError(errorMessage)
-        }
-      }
-    },
+    //       notifyError(errorMessage)
+    //     }
+    //   }
+    // },
 
     editUser(user) {
       this.editForm = { ...user, password: '' }
@@ -195,6 +251,7 @@ export default {
         password: '',
         mobileNo: '',
         isAdmin: false,
+        status: '',
       }
     },
   },

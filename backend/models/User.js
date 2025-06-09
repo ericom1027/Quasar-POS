@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
+  status: {
+    type: String,
+    enum: ["active", "inactive", "resigned"],
+    default: "active",
+  },
+
   isAdmin: {
     type: Boolean,
     default: false,

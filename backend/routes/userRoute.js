@@ -13,12 +13,12 @@ router.get("/users", controllerUser.getAllUsers);
 
 router.put("/update/:id", controllerUser.updateUser);
 
-router.delete(
-  "/delete/:id",
-  auth.verify,
-  auth.verifyAdmin,
-  controllerUser.deleteUser
-);
+// router.delete(
+//   "/delete/:id",
+//   auth.verify,
+//   auth.verifyAdmin,
+//   controllerUser.deleteUser
+// );
 
 router.post("/refresh", controllerUser.refreshToken);
 
