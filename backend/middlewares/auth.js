@@ -16,7 +16,7 @@ const createToken = (user, secretKey, expiresIn) => {
 };
 
 module.exports = {
-  createAccessToken: (user) => createToken(user, secret, "1d"),
+  createAccessToken: (user) => createToken(user, secret, "3h"),
   createRefreshToken: (user) => createToken(user, refreshSecret, "7d"),
 
   verify: (req, res, next) => {
