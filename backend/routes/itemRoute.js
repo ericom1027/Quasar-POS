@@ -8,7 +8,6 @@ const router = express.Router();
 
 router.post(
   "/add-item",
-
   auth.verify,
   auth.verifyAdmin,
   upload.single("image"),

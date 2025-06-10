@@ -55,7 +55,7 @@ exports.EditItem = (req, res) => {
   //   console.log(itemId);
   let editItem = {
     itemName: req.body.itemName,
-    size: req.body.size,
+    size: req.body.size || "",
     price: req.body.price,
     category: req.body.category,
     image: req.file ? req.file.filename : null,
