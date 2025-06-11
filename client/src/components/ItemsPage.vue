@@ -119,6 +119,7 @@ function editItem(item) {
   isEditing.value = true
   dialogVisible.value = true
   form.value = { ...item }
+  selectedFile.value = null
 }
 
 function openAddDialog() {
