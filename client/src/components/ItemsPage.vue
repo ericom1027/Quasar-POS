@@ -104,7 +104,14 @@ const itemsStore = useItemsStore()
 const columns = [
   { name: 'itemName', label: 'Item Name', field: 'itemName' },
   { name: 'category', label: 'Category', field: 'category' },
-  { name: 'price', label: 'Price', field: 'price' },
+  {
+    name: 'price',
+    label: 'Price',
+    align: 'left',
+    field: 'price',
+    format: (val) => `₱${parseFloat(val).toFixed(2)}`,
+  },
+
   { name: 'stock', label: 'Stock', field: 'stock' },
   { name: 'size', label: 'Size', field: 'size' },
   { name: 'actions', label: 'Actions', field: 'actions', sortable: false, align: 'center' },
