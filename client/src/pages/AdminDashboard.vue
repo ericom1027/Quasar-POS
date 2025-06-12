@@ -72,8 +72,10 @@
     </div>
 
     <!-- Charts Section -->
+
     <div class="q-mt-lg row q-col-gutter-md">
-      <div class="col-12 col-sm-12 col-md-6 q-mb-md">
+      <!-- Daily Sales Chart -->
+      <div class="col-12 col-md-4">
         <q-card flat bordered class="q-pa-md" style="min-height: 300px; height: 100%">
           <div class="text-subtitle1 q-mb-sm">Daily Sales (This Month)</div>
           <div class="column" style="flex: 1">
@@ -82,11 +84,41 @@
         </q-card>
       </div>
 
-      <div class="col-12 col-sm-12 col-md-6 q-mb-md">
+      <!-- Monthly Sales Chart -->
+      <div class="col-12 col-md-4">
         <q-card flat bordered class="q-pa-md" style="min-height: 300px; height: 100%">
           <div class="text-subtitle1 q-mb-sm">Monthly Sales (This Year)</div>
           <div class="column" style="flex: 1">
             <pie-chart :chart-data="monthlyChartData" :chart-options="chartOptions" />
+          </div>
+        </q-card>
+      </div>
+
+      <!-- Daily Sold Items Gauge -->
+      <div class="col-12 col-md-4">
+        <q-card
+          flat
+          bordered
+          class="flex flex-center q-pa-md"
+          style="min-height: 300px; border-radius: 12px"
+        >
+          <div class="column items-center">
+            <q-knob
+              :model-value="soldToday"
+              :min="0"
+              :max="dailyTarget"
+              size="100px"
+              color="deep-purple"
+              track-color="grey-6"
+              show-value
+              :thickness="0.22"
+              class="q-mb-sm"
+            >
+              <template #label>
+                <div class="text-subtitle2 text-center">{{ soldToday }} / {{ dailyTarget }}</div>
+              </template>
+            </q-knob>
+            <div class="text-caption text-center">Items Sold Today</div>
           </div>
         </q-card>
       </div>
@@ -107,12 +139,20 @@ import Typed from 'typed.js'
 const billStore = useBillStore()
 const typedText = ref(null)
 
+const dailyTarget = 100
+
+const soldToday = computed(() => {
+  return billStore.dailyItemsSoldReport?.overallTotalQty || 0
+})
+
 onMounted(() => {
+  const today = new Date().toISOString().split('T')[0]
   billStore.getDailySales()
   billStore.getWeeklySales()
   billStore.getMonthlySales()
   billStore.getDailySalesGraph()
   billStore.getMonthlySalesGraph()
+  billStore.getDailyItemsSoldReport(today)
 
   new Typed(typedText.value, {
     strings: [
