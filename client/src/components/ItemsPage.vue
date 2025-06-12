@@ -8,20 +8,23 @@
         margin-bottom: 1rem;
       "
     >
-      <q-btn label="Add Item" @click="openAddDialog" color="primary" />
+      <q-btn class="q-px-sm q-py-xs" label="Add Item" @click="openAddDialog" color="primary" />
 
-      <!-- Search Input -->
-      <q-input
-        v-model="search"
-        label="Search by Item Name"
-        outlined
-        dense
-        debounce="300"
-        clearable
-        style="max-width: 300px"
-      >
-        <template v-slot:append> <q-icon name="search" /> </template
-      ></q-input>
+      <div style="display: flex; gap: 1rem; align-items: center">
+        <q-input
+          v-model="search"
+          label="Search by Item Name"
+          outlined
+          dense
+          debounce="300"
+          clearable
+          style="max-width: 300px"
+        >
+          <template v-slot:append> <q-icon name="search" /> </template>
+        </q-input>
+
+        <q-toggle v-model="showLowStockOnly" label="Show Low Stock Only" color="red" />
+      </div>
     </div>
 
     <q-table
@@ -33,6 +36,25 @@
       class="q-mt-md"
       :loading="itemsStore.loading"
     >
+      <template v-slot:body-cell-stock="props">
+        <q-td :props="props">
+          <q-badge
+            :color="props.row.lowStock ? 'red' : 'green'"
+            :label="props.row.stock.toString()"
+            outline
+          />
+        </q-td>
+      </template>
+
+      <q-td :props="props">
+        <q-badge
+          :color="props.row.lowStock ? 'red' : 'green'"
+          :label="props.row.stock.toString()"
+          outline
+        />
+        <q-icon v-if="props.row.lowStock" name="warning" color="red" class="q-ml-sm" />
+      </q-td>
+
       <template v-slot:body-cell-actions="props">
         <q-td align="center">
           <q-btn icon="edit" flat dense @click="editItem(props.row)" />
@@ -99,14 +121,26 @@ const form = ref({
 })
 const selectedFile = ref(null)
 const uploaderRef = ref(null)
+const showLowStockOnly = ref(false)
 
 const search = ref('')
 
 const filteredItems = computed(() => {
-  if (!search.value) return itemsStore.items
-  return itemsStore.items.filter((item) =>
-    item.itemName.toLowerCase().includes(search.value.toLowerCase()),
-  )
+  let result = itemsStore.items
+
+  // Search filter
+  if (search.value) {
+    result = result.filter((item) =>
+      item.itemName.toLowerCase().includes(search.value.toLowerCase()),
+    )
+  }
+
+  // Low stock filter
+  if (showLowStockOnly.value) {
+    result = result.filter((item) => item.lowStock)
+  }
+
+  return result
 })
 
 onMounted(() => {

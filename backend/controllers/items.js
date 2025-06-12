@@ -37,11 +37,20 @@ exports.addItemController = (req, res) => {
 
 // Get Items
 exports.getItems = (req, res) => {
+  const LOW_STOCK_THRESHOLD = 5;
+
   return itemModel
     .find({})
     .then((items) => {
       if (items.length > 0) {
-        return res.status(200).send({ items });
+        const updatedItems = items.map((item) => {
+          return {
+            ...item.toObject(),
+            lowStock: item.stock <= LOW_STOCK_THRESHOLD,
+          };
+        });
+
+        return res.status(200).send({ items: updatedItems });
       } else {
         return res.status(200).send({ message: "No items found." });
       }
