@@ -41,6 +41,7 @@ exports.getItems = (req, res) => {
 
   return itemModel
     .find({})
+    .sort({ itemName: 1 })
     .then((items) => {
       if (items.length > 0) {
         const updatedItems = items.map((item) => {
