@@ -232,8 +232,11 @@ function printReceipt(bill) {
          <div><strong>Customer Name:</strong> ${bill.customerName}</div>
         <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
        <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
-       ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
-        <div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>
+         ${
+           bill?.paymentMode?.toLowerCase() === 'gcash' && bill?.gcashReferenceNumber
+             ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>`
+             : ''
+         }
         <div class="line"></div>
 
         <div class="items">

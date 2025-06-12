@@ -50,3 +50,21 @@
   justify-content: space-between;
   font-size: 13px;
 }
+
+.disabled-card {
+  cursor: not-allowed;
+  position: relative;
+}
+
+.sold-out-label {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: red;
+  color: white;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  border-radius: 4px;
+  z-index: 2;
+}

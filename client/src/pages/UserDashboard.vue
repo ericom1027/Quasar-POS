@@ -20,10 +20,13 @@
             <q-card
               flat
               bordered
-              class="bg-grey-1 no-caret"
+              class="bg-grey-1 no-caret position-relative"
               style="min-height: 200px"
-              @click="addToCart(item)"
+              :class="{ 'disabled-card': item.stock === 0 }"
+              :style="item.stock === 0 ? 'pointer-events: none; opacity: 0.5;' : ''"
+              @click="item.stock > 0 && addToCart(item)"
             >
+              <div v-if="item.stock === 0" class="sold-out-label">SOLD OUT</div>
               <div
                 style="
                   height: 100px;
@@ -54,6 +57,9 @@
                 </div>
                 <div class="text-subtitle2 text-primary" style="margin-top: 4px">
                   ₱ {{ item.price.toFixed(2) }}
+                </div>
+                <div class="text-caption text-grey" style="margin-top: 2px">
+                  Stock: {{ item.stock ? item.stock : 0 }}
                 </div>
               </q-card-section>
             </q-card>
@@ -344,10 +350,14 @@ function printReceipt(bill) {
          <div><strong>Cashier:</strong> ${bill.cashierName}</div>
           <div><strong>Customer Name:</strong> ${bill.customerName}</div>
           <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
-       <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
-       ${bill.paymentMode === 'GCash' ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>` : ''}
-        <div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>
-        <div class="line"></div>
+          <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
+     ${
+       bill?.paymentMode?.toLowerCase() === 'gcash' && bill?.gcashReferenceNumber
+         ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>`
+         : ''
+     }
+
+       <div class="line"></div>
 
         <div class="items">
           ${bill.cartItems

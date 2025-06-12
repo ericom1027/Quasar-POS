@@ -24,6 +24,11 @@ const itemSchema = mongoose.Schema(
       type: String,
       required: false,
     },
+    stock: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

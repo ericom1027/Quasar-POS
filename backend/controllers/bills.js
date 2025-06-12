@@ -4,6 +4,7 @@ const moment = require("moment-timezone");
 const Shift = require("../models/Shift");
 const User = require("../models/User");
 const Expense = require("../models/Expenses");
+const Item = require("../models/items");
 const _ = require("lodash");
 
 async function getNextInvoiceNumber() {
@@ -66,8 +67,26 @@ exports.addBillsController = async (req, res) => {
       });
     }
 
-    const cashierName = `${user.firstname} ${user.lastname}`;
+    for (const cartItem of cartItems) {
+      const existingItem = await Item.findOne({ itemName: cartItem.itemName });
 
+      if (!existingItem) {
+        return res
+          .status(404)
+          .send({ error: `Item "${cartItem.itemName}" not found.` });
+      }
+
+      if (existingItem.stock < cartItem.qty) {
+        return res.status(400).send({
+          error: `Insufficient stock for item "${existingItem.itemName}". Available: ${existingItem.stock}, Required: ${cartItem.qty}`,
+        });
+      }
+
+      existingItem.stock -= cartItem.qty;
+      await existingItem.save();
+    }
+
+    const cashierName = `${user.firstname} ${user.lastname}`;
     const subTotal = cartItems.reduce(
       (acc, item) => acc + item.qty * item.price,
       0

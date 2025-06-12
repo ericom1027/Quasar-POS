@@ -30,6 +30,6 @@ yarn-error.log*
 *.sln
 
 # local .env files
-.env
+client/.env
 .env.local*
 

@@ -52,6 +52,7 @@
           <q-input v-model="form.itemName" label="Item Name" />
           <q-input v-model="form.category" label="Category" />
           <q-input v-model.number="form.price" label="Price" type="number" />
+          <q-input v-model.number="form.stock" label="Stock" type="number" />
           <q-input v-if="form.category !== 'rice'" v-model="form.size" label="Size" />
           <q-uploader
             label="Upload Image"
@@ -82,6 +83,7 @@ const columns = [
   { name: 'itemName', label: 'Item Name', field: 'itemName' },
   { name: 'category', label: 'Category', field: 'category' },
   { name: 'price', label: 'Price', field: 'price' },
+  { name: 'stock', label: 'Stock', field: 'stock' },
   { name: 'size', label: 'Size', field: 'size' },
   { name: 'actions', label: 'Actions', field: 'actions', sortable: false, align: 'center' },
 ]
@@ -130,6 +132,7 @@ function openAddDialog() {
     itemName: '',
     category: '',
     price: 0,
+    stock: 0,
     size: '',
   }
   selectedFile.value = null
@@ -147,6 +150,9 @@ function saveItem() {
   data.append('itemName', form.value.itemName)
   data.append('category', form.value.category)
   data.append('price', form.value.price)
+  data.append('stock', form.value.stock)
+  data.append('stock', form.value.stock)
+
   if (form.value.category !== 'rice') {
     data.append('size', form.value.size)
   }

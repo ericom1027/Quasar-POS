@@ -4,8 +4,10 @@ exports.addItemController = (req, res) => {
   let newItemData = {
     itemName: req.body.itemName,
     price: req.body.price,
+    size: req.body.size || "",
     category: req.body.category,
     image: req.file ? req.file.filename : null,
+    stock: req.body.stock || 0,
   };
 
   let newItem = new itemModel(newItemData);
@@ -59,10 +61,16 @@ exports.EditItem = async (req, res) => {
       return res.status(404).send({ error: "Item not found" });
     }
 
+    let stockValue = req.body.stock;
+    if (Array.isArray(stockValue)) {
+      stockValue = stockValue[0];
+    }
+
     let updatedData = {
       itemName: req.body.itemName,
       size: req.body.size || "",
       price: req.body.price,
+      stock: Number(stockValue),
       category: req.body.category,
       image: req.file ? req.file.filename : existingItem.image,
     };
