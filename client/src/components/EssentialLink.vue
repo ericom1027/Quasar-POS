@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable :to="props.link" exact>
+  <q-item clickable :to="props.link" exact @click="handleClick">
     <q-item-section v-if="props.icon" avatar>
       <q-icon :name="props.icon" />
     </q-item-section>
@@ -33,4 +33,10 @@ const props = defineProps({
     default: '',
   },
 })
+
+const emit = defineEmits(['navigate'])
+
+function handleClick() {
+  emit('navigate')
+}
 </script>

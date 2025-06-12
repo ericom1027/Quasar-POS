@@ -80,8 +80,8 @@
 
     <!-- Edit Dialog -->
     <q-dialog v-model="editDialog" persistent>
-      <q-card style="min-width: 300px">
-        <q-card-section style="width: 400px; height: 500px">
+      <q-card class="q-pa-md" style="width: 100%; max-width: 500px">
+        <q-card-section>
           <div class="text-h6">Edit User</div>
           <q-form @submit.prevent="updateUser">
             <q-input v-model="editForm.firstname" label="First Name" />

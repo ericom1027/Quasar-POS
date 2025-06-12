@@ -76,9 +76,14 @@
         </q-item-label>
 
         <!-- Links based on role -->
-        <EssentialLink v-for="link in filteredLinks" :key="link.title" v-bind="link" />
+        <EssentialLink
+          v-for="link in filteredLinks"
+          :key="link.title"
+          v-bind="link"
+          @navigate="openedExpansion = ''"
+        />
 
-        <!-- Reports dropdown for admin only -->
+        <!---------- Reports dropdown for admin only ----------------->
         <q-expansion-item
           v-if="authStore.user?.isAdmin"
           expand-separator

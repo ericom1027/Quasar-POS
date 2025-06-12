@@ -55,8 +55,7 @@ onMounted(() => {
 
 const formatMoney = (value) => {
   const num = Number(value)
-  if (isNaN(num)) return '0.00'
-  return num.toFixed(2)
+  return isNaN(num) || value === null || value === '' ? '0.00' : num.toFixed(2)
 }
 
 const formatDate = (date) => {
@@ -150,25 +149,25 @@ const columns = [
     name: 'startingCash',
     label: 'Starting Cash',
     field: 'startingCash',
-    format: (val) => `₱ ${Number(val).toFixed(2)}`,
+    format: formatMoney,
   },
   {
     name: 'endingCash',
     label: 'Ending Cash',
     field: 'endingCash',
-    format: (val) => `₱ ${Number(val).toFixed(2)}`,
+    format: formatMoney,
   },
   {
     name: 'expectedCash',
     label: 'Expected Cash',
     field: 'expectedCash',
-    format: (val) => `₱ ${Number(val).toFixed(2)}`,
+    format: formatMoney,
   },
   {
     name: 'cashDifference',
     label: 'Difference',
     field: 'cashDifference',
-    format: (val) => `₱ ${Number(val).toFixed(2)}`,
+    format: formatMoney,
   },
 ]
 </script>
