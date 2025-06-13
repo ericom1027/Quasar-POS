@@ -103,23 +103,21 @@
           style="min-height: 300px; border-radius: 12px"
         >
           <div class="column items-center">
+            <div class="text-subtitle1 q-mb-sm">Items Sold Today</div>
             <q-knob
               :model-value="soldToday"
               :min="0"
               :max="dailyTarget"
-              size="100px"
+              size="150px"
               color="deep-purple"
               track-color="grey-6"
               show-value
-              :thickness="0.22"
+              :thickness="0.25"
               class="q-mb-sm"
               :format-value="(val) => `${val}%`"
             >
-              <template #label>
-                <div class="text-subtitle2 text-center">{{ soldToday }} / {{ dailyTarget }}</div>
-              </template>
+              <div class="text-subtitle2 text-center" style="font-size: 22px">{{ soldToday }}%</div>
             </q-knob>
-            <div class="text-caption text-center">Items Sold Today</div>
           </div>
         </q-card>
       </div>
@@ -140,18 +138,12 @@ import Typed from 'typed.js'
 const billStore = useBillStore()
 const typedText = ref(null)
 
-// const dailyTarget = 100
-
-// const soldToday = computed(() => {
-//   return billStore.dailyItemsSoldReport?.overallTotalQty || 0
-// })
-
 const dailyTarget = 100
 
 const soldToday = computed(() => {
   const qty = Number(billStore.dailyItemsSoldReport?.overallTotalQty) || 0
   const percent = (qty / dailyTarget) * 100
-  return Math.min(Math.round(percent), 100)
+  return Math.min(Number(percent.toFixed(0)), 100)
 })
 
 onMounted(() => {
