@@ -149,6 +149,22 @@
             outlined
             class="q-mb-sm"
           />
+
+          <q-select
+            v-model="form.orderType"
+            :options="[
+              { label: 'Select Order Type', value: '', disabled: true },
+              { label: 'Dine-in', value: 'Dine-in' },
+              { label: 'Take-out', value: 'Take-out' },
+            ]"
+            label="Order Type"
+            outlined
+            dense
+            emit-value
+            map-options
+            class="q-mb-md"
+          />
+
           <q-select
             v-model="form.paymentMode"
             :options="['Cash', 'GCash']"
@@ -182,6 +198,7 @@
         </q-card-section>
 
         <div class="q-gutter-sm q-ml-md">
+          <div class="text-body2">Take-Out Charge: ₱{{ takeOutCharge.toFixed(2) }}</div>
           <div class="text-body2">Subtotal: ₱{{ subTotal.toFixed(2) }}</div>
           <div class="text-body2">VAT Sales: ₱{{ vatSales.toFixed(2) }}</div>
           <div class="text-body2">VAT Amount (12%): ₱{{ vatAmount.toFixed(2) }}</div>
@@ -243,6 +260,7 @@ const form = ref({
   cash: 0,
   isSeniorOrPWD: false,
   gcashReferenceNumber: '',
+  orderType: '',
 })
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
@@ -345,12 +363,13 @@ function printReceipt(bill) {
 
         <div class="line"></div>
 
-        <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
-         <div><strong>Date:</strong> ${formattedDate}</div>
+          <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
+          <div><strong>Date:</strong> ${formattedDate}</div>
          <div><strong>Cashier:</strong> ${bill.cashierName}</div>
           <div><strong>Customer Name:</strong> ${bill.customerName}</div>
           <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
           <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
+          <div><strong>Order Type:</strong> ${bill.orderType}</div>
      ${
        bill?.paymentMode?.toLowerCase() === 'gcash' && bill?.gcashReferenceNumber
          ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>`
@@ -373,8 +392,8 @@ function printReceipt(bill) {
             .join('')}
         </div>
 
-        <div class="line"></div>
-
+       <div class="line"></div>
+       <div class="row1"><span>Take Out Charge:</span><span>PHP ${bill.takeOutCharge.toFixed(2)}</span></div>
        <div class="row1"><span>Subtotal:</span><span>PHP ${bill.subTotal.toFixed(2)}</span></div>
        <div class="row1"><span>VAT Sales:</span><span>PHP ${bill.vatSales.toFixed(2)}</span></div>
        <div class="row1"><span>VAT Amount:</span><span>PHP ${bill.vatAmount.toFixed(2)}</span></div>
@@ -413,6 +432,7 @@ function resetForm() {
   form.value = {
     customerName: '',
     customerNumber: '',
+    orderType: '',
     paymentMode: '',
     cash: 0,
     isSeniorOrPWD: false,
@@ -440,13 +460,37 @@ const filteredItems = computed(() => {
   )
 })
 
+const exemptedItemNames = [
+  'Pancit Palabok Bilao Small',
+  'Pancit Palabok Bilao Medium',
+  'Pancit Palabok Bilao Large',
+]
+
+const exemptedCategories = ['Pasalubong', 'Egg']
+
+const isTakeOut = computed(
+  () => form.value.orderType?.toLowerCase().replace(/[\s-]/g, '') === 'takeout',
+)
+
+const allItemsExempted = computed(() =>
+  cartStore.items.every(
+    (item) =>
+      exemptedItemNames.includes(item.itemName) || exemptedCategories.includes(item.category),
+  ),
+)
+
+const takeOutCharge = computed(() => (isTakeOut.value && !allItemsExempted.value ? 5 : 0))
+
 const subTotal = computed(() =>
   cartStore.items.reduce((sum, item) => sum + item.quantity * item.price, 0),
 )
 const vatAmount = computed(() => subTotal.value * 0.12)
 const vatSales = computed(() => subTotal.value - vatAmount.value)
+
 const discount = computed(() => (form.value.isSeniorOrPWD ? subTotal.value * 0.2 : 0))
-const totalAmount = computed(() => subTotal.value - discount.value)
+
+const totalAmount = computed(() => subTotal.value - discount.value + takeOutCharge.value)
+
 const change = computed(() => form.value.cash - totalAmount.value)
 
 const confirmCheckout = async () => {
@@ -458,10 +502,16 @@ const confirmCheckout = async () => {
     return
   }
 
+  if (!form.value.orderType) {
+    Notify.create({ type: 'negative', message: 'Please select an order type' })
+    return
+  }
+
   try {
     const billData = {
       customerName: form.value.customerName,
       customerNumber: form.value.customerNumber,
+      orderType: form.value.orderType,
       paymentMode: form.value.paymentMode.toLowerCase(),
       gcashReferenceNumber:
         form.value.paymentMode === 'GCash' ? form.value.gcashReferenceNumber : '',

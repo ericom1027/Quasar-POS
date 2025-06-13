@@ -27,6 +27,16 @@ const billSchema = mongoose.Schema(
       required: false,
     },
 
+    orderType: {
+      type: String,
+      enum: ["Dine-in", "Take-out"],
+      required: true,
+    },
+    takeOutCharge: {
+      type: Number,
+      default: 0,
+    },
+
     paymentMode: {
       type: String,
       required: true,

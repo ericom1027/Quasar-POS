@@ -226,12 +226,13 @@ function printReceipt(bill) {
 
         <div class="line"></div>
 
-        <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
+         <div><strong>Invoice:</strong> ${bill.invoiceNumber}</div>
          <div><strong>Date:</strong> ${formattedDate}</div>
          <div><strong>Cashier:</strong> ${bill.cashierName}</div>
          <div><strong>Customer Name:</strong> ${bill.customerName}</div>
-        <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
-       <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
+         <div><strong>Customer No.:</strong> ${bill.customerNumber}</div>
+        <div><strong>Payment Mode:</strong> ${bill.paymentMode}</div>
+         <div><strong>Order Type:</strong> ${bill.orderType}</div>
          ${
            bill?.paymentMode?.toLowerCase() === 'gcash' && bill?.gcashReferenceNumber
              ? `<div><strong>GCash Ref:</strong> ${bill.gcashReferenceNumber}</div>`
@@ -254,7 +255,7 @@ function printReceipt(bill) {
         </div>
 
         <div class="line"></div>
-
+       <div class="row1"><span>Take Out Charge:</span><span>PHP ${bill.takeOutCharge.toFixed(2)}</span></div>
        <div class="row1"><span>Subtotal:</span><span>PHP ${bill.subTotal.toFixed(2)}</span></div>
        <div class="row1"><span>VAT Sales:</span><span>PHP ${bill.vatSales.toFixed(2)}</span></div>
        <div class="row1"><span>VAT Amount:</span><span>PHP ${bill.vatAmount.toFixed(2)}</span></div>
@@ -301,6 +302,7 @@ const columns = [
   { name: 'invoiceNumber', label: 'Invoice No.', field: 'invoiceNumber', align: 'left' },
   { name: 'items', label: 'Items', field: 'cartItems', align: 'left' },
   { name: 'paymentMode', label: 'Payment mode', field: 'paymentMode', align: 'left' },
+  { name: 'orderType', label: 'Order Type', field: 'orderType', align: 'left' },
   {
     name: 'gcashReferenceNumber',
     label: 'GCash Payment Reference',

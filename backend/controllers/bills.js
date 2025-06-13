@@ -38,6 +38,7 @@ exports.addBillsController = async (req, res) => {
       cash,
       change,
       isSeniorOrPWD,
+      orderType,
     } = req.body;
 
     const user = req.user;
@@ -86,6 +87,43 @@ exports.addBillsController = async (req, res) => {
       await existingItem.save();
     }
 
+    function normalizeOrderType(value) {
+      const val = value?.toLowerCase().replace(/[\s-]/g, "");
+      if (val === "dinein") return "Dine-in";
+      if (val === "takeout") return "Take-out";
+      return "Dine-in";
+    }
+
+    const normalizedOrderType = normalizeOrderType(orderType);
+    const isTakeOut = normalizedOrderType === "Take-out";
+
+    const exemptedItemNames = [
+      "Pancit Palabok Bilao Small",
+      "Pancit Palabok Bilao Medium",
+      "Pancit Palabok Bilao Large",
+    ];
+
+    const exemptedCategories = ["Pasalubong", "Egg"];
+
+    let allItemsExempted = true;
+
+    for (const item of cartItems) {
+      const foundItem = await Item.findOne({ itemName: item.itemName });
+      if (!foundItem) continue;
+
+      const isNameExempted = exemptedItemNames.includes(foundItem.itemName);
+      const isCategoryExempted = exemptedCategories.includes(
+        foundItem.category
+      );
+
+      if (!isNameExempted && !isCategoryExempted) {
+        allItemsExempted = false;
+        break;
+      }
+    }
+
+    const takeOutCharge = isTakeOut && !allItemsExempted ? 5 : 0;
+
     const cashierName = `${user.firstname} ${user.lastname}`;
     const subTotal = cartItems.reduce(
       (acc, item) => acc + item.qty * item.price,
@@ -95,7 +133,7 @@ exports.addBillsController = async (req, res) => {
     const vatSales = subTotal - vatAmount;
 
     const discount = isSeniorOrPWD ? subTotal * 0.2 : 0;
-    const totalAmount = subTotal - discount;
+    const totalAmount = subTotal - discount + takeOutCharge;
 
     if (typeof cash !== "number" || cash < 0) {
       return res.status(400).json({ error: "Invalid cash amount." });
@@ -126,6 +164,8 @@ exports.addBillsController = async (req, res) => {
       discount,
       seniorOrPWD: isSeniorOrPWD || false,
       shiftId: currentShift._id,
+      takeOutCharge,
+      orderType: normalizedOrderType,
     };
 
     const newBill = new Bills(newBillData);
