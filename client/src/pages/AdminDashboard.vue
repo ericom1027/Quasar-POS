@@ -113,6 +113,7 @@
               show-value
               :thickness="0.22"
               class="q-mb-sm"
+              :format-value="(val) => `${val}%`"
             >
               <template #label>
                 <div class="text-subtitle2 text-center">{{ soldToday }} / {{ dailyTarget }}</div>
@@ -139,10 +140,18 @@ import Typed from 'typed.js'
 const billStore = useBillStore()
 const typedText = ref(null)
 
+// const dailyTarget = 100
+
+// const soldToday = computed(() => {
+//   return billStore.dailyItemsSoldReport?.overallTotalQty || 0
+// })
+
 const dailyTarget = 100
 
 const soldToday = computed(() => {
-  return billStore.dailyItemsSoldReport?.overallTotalQty || 0
+  const qty = Number(billStore.dailyItemsSoldReport?.overallTotalQty) || 0
+  const percent = (qty / dailyTarget) * 100
+  return Math.min(Math.round(percent), 100)
 })
 
 onMounted(() => {
