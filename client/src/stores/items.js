@@ -34,7 +34,10 @@ export const useItemsStore = defineStore('items', {
         notifySuccess('Item added successfully!')
       } catch (error) {
         console.error('Add Item Failed:', error)
-        notifyError('Failed to add item.')
+
+        const message = error.response?.data?.error || 'Failed to add item.'
+        notifyError(message)
+
         throw error
       }
     },
@@ -46,12 +49,21 @@ export const useItemsStore = defineStore('items', {
             'Content-Type': 'multipart/form-data',
           },
         })
+
+        const updated = response.data.updatedItem
         const index = this.items.findIndex((i) => i._id === id)
-        if (index !== -1) this.items[index] = response.data.updatedItem
+        if (index !== -1) {
+          this.items[index] = {
+            ...updated,
+            lowStock: updated.stock <= 5,
+          }
+        }
+
         notifySuccess('Item updated successfully!')
       } catch (error) {
         console.error('Edit Item Failed:', error)
-        notifyError('Failed to update item.')
+        const message = error.response?.data?.error || 'Failed to update item.'
+        notifyError(message)
       }
     },
 

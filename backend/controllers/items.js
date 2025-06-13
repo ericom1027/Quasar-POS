@@ -71,6 +71,15 @@ exports.EditItem = async (req, res) => {
       return res.status(404).send({ error: "Item not found" });
     }
 
+    const duplicateItem = await itemModel.findOne({
+      itemName: req.body.itemName,
+      _id: { $ne: itemId },
+    });
+
+    if (duplicateItem) {
+      return res.status(409).send({ error: "Item already exists" });
+    }
+
     let stockValue = req.body.stock;
     if (Array.isArray(stockValue)) {
       stockValue = stockValue[0];

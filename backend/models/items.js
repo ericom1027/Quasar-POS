@@ -10,6 +10,7 @@ const itemSchema = mongoose.Schema(
     size: {
       type: String,
       required: false,
+      default: "",
     },
 
     price: {

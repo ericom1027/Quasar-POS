@@ -135,14 +135,12 @@ const search = ref('')
 const filteredItems = computed(() => {
   let result = itemsStore.items
 
-  // Search filter
   if (search.value) {
     result = result.filter((item) =>
       item.itemName.toLowerCase().includes(search.value.toLowerCase()),
     )
   }
 
-  // Low stock filter
   if (showLowStockOnly.value) {
     result = result.filter((item) => item.lowStock)
   }
@@ -193,10 +191,8 @@ function saveItem() {
   data.append('price', form.value.price)
   data.append('stock', form.value.stock)
   data.append('stock', form.value.stock)
+  data.append('size', form.value.category !== 'rice' ? form.value.size : '')
 
-  if (form.value.category !== 'rice') {
-    data.append('size', form.value.size)
-  }
   if (selectedFile.value) {
     data.append('image', selectedFile.value)
   }
