@@ -122,7 +122,25 @@ exports.addBillsController = async (req, res) => {
       }
     }
 
-    const takeOutCharge = isTakeOut && !allItemsExempted ? 5 : 0;
+    // const takeOutCharge = isTakeOut && !allItemsExempted ? 5 : 0;
+
+    let takeOutCharge = 0;
+
+    if (isTakeOut) {
+      for (const item of cartItems) {
+        const foundItem = await Item.findOne({ itemName: item.itemName });
+        if (!foundItem) continue;
+
+        const isNameExempted = exemptedItemNames.includes(foundItem.itemName);
+        const isCategoryExempted = exemptedCategories.includes(
+          foundItem.category
+        );
+
+        if (!isNameExempted && !isCategoryExempted) {
+          takeOutCharge += item.qty * 5;
+        }
+      }
+    }
 
     const cashierName = `${user.firstname} ${user.lastname}`;
     const subTotal = cartItems.reduce(

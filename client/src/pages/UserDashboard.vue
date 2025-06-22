@@ -472,14 +472,30 @@ const isTakeOut = computed(
   () => form.value.orderType?.toLowerCase().replace(/[\s-]/g, '') === 'takeout',
 )
 
-const allItemsExempted = computed(() =>
-  cartStore.items.every(
-    (item) =>
-      exemptedItemNames.includes(item.itemName) || exemptedCategories.includes(item.category),
-  ),
-)
+// const allItemsExempted = computed(() =>
+//   cartStore.items.every(
+//     (item) =>
+//       exemptedItemNames.includes(item.itemName) || exemptedCategories.includes(item.category),
+//   ),
+// )
 
-const takeOutCharge = computed(() => (isTakeOut.value && !allItemsExempted.value ? 5 : 0))
+// const takeOutCharge = computed(() => (isTakeOut.value && !allItemsExempted.value ? 5 : 0))
+const takeOutCharge = computed(() => {
+  if (!isTakeOut.value) return 0
+
+  let charge = 0
+
+  for (const item of cartStore.items) {
+    const isNameExempted = exemptedItemNames.includes(item.itemName)
+    const isCategoryExempted = exemptedCategories.includes(item.category)
+
+    if (!isNameExempted && !isCategoryExempted) {
+      charge += item.quantity * 5
+    }
+  }
+
+  return charge
+})
 
 const subTotal = computed(() =>
   cartStore.items.reduce((sum, item) => sum + item.quantity * item.price, 0),

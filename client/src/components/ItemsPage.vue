@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, nextTick } from 'vue'
 import { useItemsStore } from '../stores/items'
 
 const itemsStore = useItemsStore()
@@ -175,7 +175,12 @@ function openAddDialog() {
     size: '',
   }
   selectedFile.value = null
-  uploaderRef.value.reset()
+
+  nextTick(() => {
+    if (uploaderRef.value) {
+      uploaderRef.value.reset()
+    }
+  })
 }
 
 function onFileAdded(files) {
@@ -190,7 +195,7 @@ function saveItem() {
   data.append('category', form.value.category)
   data.append('price', form.value.price)
   data.append('stock', form.value.stock)
-  data.append('stock', form.value.stock)
+
   data.append('size', form.value.category !== 'rice' ? form.value.size : '')
 
   if (selectedFile.value) {
